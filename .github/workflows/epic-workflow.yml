@@ -49,7 +49,7 @@ jobs:
             console.log(epicBody);
 
             // Amend the Epic description with a checkbox and link to the new issue
-            const newItemLink = `- [ ] [#${issueNumber}](${issueTitle})`;
+            const newItemLink = `- [ ] #${issueNumber}`;
             console.log(`New Item Link: ${newItemLink}`);
             const updatedDescription = `${epicBody}\n${newItemLink}`;
             console.log("Updated Description:");
