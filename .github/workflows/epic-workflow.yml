@@ -14,8 +14,7 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             console.log("Starting script...");
-            const ctx = github.context;
-            const payload = ctx.payload;
+            const payload = context.payload;
             const issueNumber = payload.issue.number;
             const issueTitle = payload.issue.title;
             const labelName = payload.label.name;
