@@ -13,9 +13,10 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const issueNumber = context.issue.number;
-            const issueTitle = context.issue.title;
-            const labelName = context.label.name;
+            const payload = context.payload;
+            const issueNumber = payload.issue.number;
+            const issueTitle = payload.issue.title;
+            const labelName = payload.label.name;
 
             // Check if the removed label is an Epic label (based on your naming convention)
             if (!labelName.includes('(Epic #')) {
