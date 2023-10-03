@@ -14,10 +14,11 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             console.log("Starting script...");
-
-            const issueNumber = context.issue.number;
-            const issueTitle = context.issue.title;
-            const labelName = context.payload.label.name;
+            const context = github.context;
+            const payload = context.payload;
+            const issueNumber = payload.issue.number;
+            const issueTitle = payload.issue.title;
+            const labelName = payload.label.name;
             
             console.log(`Issue Number: ${issueNumber}`);
             console.log(`Issue Title: ${issueTitle}`);
