@@ -1,0 +1,65 @@
+name: Update Epic Description
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  update_epic_description:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Amend Epic Description with New Item
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            console.log("Starting script...");
+
+            const issueNumber = context.issue.number;
+            const issueTitle = context.issue.title;
+            const labelName = context.payload.label.name;
+            
+            console.log(`Issue Number: ${issueNumber}`);
+            console.log(`Issue Title: ${issueTitle}`);
+            console.log(`Label Name: ${labelName}`);
+
+            // Check if the label applied is an Epic label
+            if (!labelName.includes('(Epic #')) {
+              console.log('The applied label is not an Epic label. Exiting...');
+              return;
+            }
+
+            // Extract the Epic's issue number from the label name
+            const epicNumber = labelName.match(/\(Epic #(\d+)\)/)[1];
+            console.log(`Epic Number Extracted: ${epicNumber}`);
+
+            if (!epicNumber) {
+              console.log('Could not determine the Epic issue number. Exiting...');
+              return;
+            }
+
+            // Fetch the description of the Epic
+            const epic = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: epicNumber
+            });
+            const epicBody = epic.data.body;
+            console.log("Fetched Epic Body:");
+            console.log(epicBody);
+
+            // Amend the Epic description with a checkbox and link to the new issue
+            const newItemLink = `- [ ] [${issueTitle}](https://github.com/${context.repo.owner}/${context.repo.repo}/issues/${issueNumber})`;
+            console.log(`New Item Link: ${newItemLink}`);
+            const updatedDescription = `${epicBody}\n${newItemLink}`;
+            console.log("Updated Description:");
+            console.log(updatedDescription);
+
+            // Update the Epic description
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: epicNumber,
+              body: updatedDescription
+            });
+            console.log("Epic description updated successfully.");
