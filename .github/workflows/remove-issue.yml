@@ -41,8 +41,7 @@ jobs:
             const epicBody = epic.data.body;
 
             // Construct the link that might exist in the Epic description
-            const issueLink = `- [ ] [#${issueNumber}](${issueTitle})`;
-
+            const issueLink = `- [ ] #${issueNumber}`;
             // Check if the link exists. If it does, remove it
             if (epicBody.includes(issueLink)) {
               const updatedDescription = epicBody.replace(issueLink, '').trim();
